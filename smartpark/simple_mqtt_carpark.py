@@ -20,7 +20,7 @@ class CarPark(mqtt_device.MqttDevice):
     @property
     def available_spaces(self):
         available = self.total_spaces - self.total_cars
-        return max(available, 0)
+        return max(0, min(available, self.total_spaces))
 
     @property
     def temperature(self):
@@ -40,11 +40,14 @@ class CarPark(mqtt_device.MqttDevice):
                     + f"TEMP: {temperature}℃"
             )
         )
-        message = (
-                f"TIME: {readable_time}, "
-                + f"SPACES: {self.available_spaces}, "
-                + f"TEMP: {temperature}℃"
-        )
+        if self.total_cars > 0:
+            message = (
+                    f"TIME: {readable_time}, "
+                    + f"SPACES: {self.available_spaces}, "
+                    + f"TEMP: {temperature}℃"
+            )
+        else:
+            message = "The car park is empty"
         self.client.publish('display', message)  # sends the message to subscriber with topic "display"
 
     def on_car_entry(self):
@@ -52,8 +55,11 @@ class CarPark(mqtt_device.MqttDevice):
         self._publish_event()
 
     def on_car_exit(self):
-        self.total_cars -= 1
-        self._publish_event()
+        if self.total_cars > 0:
+            self.total_cars -= 1
+            self._publish_event()
+        else:
+            self._publish_event()
 
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
@@ -78,5 +84,4 @@ if __name__ == '__main__':
               }
     # TODO: Read config from file
     car_park = CarPark(config)
-    print("Carpark initialized")
     print("Carpark initialized")
