@@ -1,21 +1,25 @@
 """"Demonstrates a simple implementation of an 'event' listener that triggers
 a publication via mqtt"""
+import json
 import random
 import paho.mqtt.client as paho
 
-import mqtt_device # importing mqtt_device's attributes and properties.
+from smartpark import mqtt_device
+from smartpark.mqtt_device import MqttDevice
 
 
 class Sensor(mqtt_device.MqttDevice):
 
-    def __init__(self, config): # Sensor class' attributes are referred to config file, where all the infos are kept.
-        self.name = config["name"] # so that people who don't code, can also access the config file(json) and change the value.
-        self.location = config["location"]
-        self.broker = config["broker"]
-        self.port = config["port"]
+    def __init__(self, config):  # Sensor class' attributes are referred to config file, where all the infos are kept.
+        super().__init__(config)
+        self.name = config['CarParks'][0][
+            "name"]  # so that people who don't code, can also access the config file(json) and change the value.
+        self.location = config['CarParks'][0]["location"]
+        self.broker = config['CarParks'][0]["broker"]
+        self.port = config['CarParks'][0]["port"]
         self.client = paho.Client()
         self.client.connect(self.broker, self.port)
-        self.topic = config["topic"] # connected to the topic.
+        self.topic = MqttDevice._create_topic_string(self)  # connected to the topic.
 
     @property
     def temperature(self):
@@ -42,17 +46,12 @@ class Sensor(mqtt_device.MqttDevice):
 if __name__ == '__main__':
     # when the program is run directly by the Python interpreter.
     # The code inside the if statement is not executed when the file's code is imported as a module.
-    config1 = {'name': 'sensor', # a dictionary to hold all the values.
-               'location': 'moondalup',
-               'topic-root': "lot",
-               'broker': 'localhost',
-               'port': 1883,
-               "topic": "lot/sensor"
-               }
-    # TODO: Read previous config from file instead of embedding
+    with open('/Users/taehyeon/Downloads/civ-ipriot-proj-carpark/samples_and_snippets/config.json', 'r') as file:
+        # Read the contents of the file
+        json_data = file.read()
 
-    sensor1 = Sensor(config1)  # create an object of the class, to access its methods
-
+        # Parse the JSON data into a Python object
+        config = json.loads(json_data)
+    sensor1 = Sensor(config)
     print("Sensor initialized")
     sensor1.start_sensing()
-

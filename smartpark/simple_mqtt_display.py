@@ -1,6 +1,6 @@
-import mqtt_device
+from smartpark import mqtt_device
 import time
-
+import json
 
 class Display(mqtt_device.MqttDevice):
     """Displays the number of cars and the temperature"""
@@ -27,12 +27,12 @@ class Display(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    config = {'name': 'display',
-              'location': 'L306',
-              'topic-root': "lot",
-              'broker': 'localhost',
-              'port': 1883,
-              'topic-qualifier': 'na'
-              }
+    if __name__ == '__main__':
+        with open('/Users/taehyeon/Downloads/civ-ipriot-proj-carpark/samples_and_snippets/config.json', 'r') as file:
+            # Read the contents of the file
+            json_data = file.read()
+
+            # Parse the JSON data into a Python object
+            config = json.loads(json_data)
     # TODO: Read config from file
     display = Display(config)  # create an object of Display class, so its methods will run.

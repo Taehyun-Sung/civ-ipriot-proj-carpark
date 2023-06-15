@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-import mqtt_device
+from smartpark import mqtt_device
 import paho.mqtt.client as paho
 from paho.mqtt.client import MQTTMessage
 import json
@@ -11,8 +11,8 @@ class CarPark(mqtt_device.MqttDevice):
 
     def __init__(self, config):
         super().__init__(config)
-        self.total_spaces = config['total-spaces']
-        self.total_cars = config['total-cars']
+        self.total_spaces = config['CarParks'][0]['total-spaces']
+        self.total_cars = config['CarParks'][0]['total-cars']
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')  # subscribes to "sensor" topic, in sensor class.
         self.client.loop_forever()
@@ -76,17 +76,15 @@ class CarPark(mqtt_device.MqttDevice):
         else:
             self.on_car_entry()
 
+
 if __name__ == '__main__':
-    config = {'name': "raf-park",
-              'total-spaces': 130,
-              'total-cars': 0,
-              'location': 'L306',
-              'topic-root': "lot",
-              'broker': 'localhost',
-              'port': 1883,
-              'topic-qualifier': 'entry',
-              'is_stuff': False
-              }
+    with open('/Users/taehyeon/Downloads/civ-ipriot-proj-carpark/samples_and_snippets/config.json', 'r') as file:
+        # Read the contents of the file
+        json_data = file.read()
+
+        # Parse the JSON data into a Python object
+        config = json.loads(json_data)
+
     # TODO: Read config from file
     car_park = CarPark(config)
     print("Carpark initialized")
