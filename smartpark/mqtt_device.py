@@ -1,5 +1,5 @@
-import paho.mqtt.client as paho
 import json
+import paho.mqtt.client as paho
 
 
 class MqttDevice:

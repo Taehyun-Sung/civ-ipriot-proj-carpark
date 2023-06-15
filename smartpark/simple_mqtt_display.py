@@ -1,6 +1,7 @@
-from smartpark import mqtt_device
 import time
 import json
+from smartpark import mqtt_device
+
 
 class Display(mqtt_device.MqttDevice):
     """Displays the number of cars and the temperature"""
@@ -14,9 +15,8 @@ class Display(mqtt_device.MqttDevice):
     def display(self, *args):
         print('*' * 20)
         for val in args:
-            print(val) # then print them in this method.
+            print(val)  # then print them in this method.
             time.sleep(1)
-
         print('*' * 20)
 
     def on_message(self, client, userdata, msg):
@@ -27,12 +27,11 @@ class Display(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    if __name__ == '__main__':
-        with open('/Users/taehyeon/Downloads/civ-ipriot-proj-carpark/samples_and_snippets/config.json', 'r') as file:
-            # Read the contents of the file
-            json_data = file.read()
+    with open('/Users/taehyeon/Downloads/civ-ipriot-proj-carpark/samples_and_snippets/config.json', 'r') as file:
+        # Read the contents of the file
+        json_data = file.read()
 
-            # Parse the JSON data into a Python object
-            config = json.loads(json_data)
+        # Parse the JSON data into a Python object
+        config = json.loads(json_data)
     # TODO: Read config from file
     display = Display(config)  # create an object of Display class, so its methods will run.

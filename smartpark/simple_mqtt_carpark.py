@@ -1,9 +1,9 @@
 import random
+import json
 from datetime import datetime
 from smartpark import mqtt_device
-import paho.mqtt.client as paho
 from paho.mqtt.client import MQTTMessage
-import json
+
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -25,7 +25,7 @@ class CarPark(mqtt_device.MqttDevice):
 
     @property
     def temperature(self):
-        self._temperature
+        return self._temperature
 
     @temperature.setter
     def temperature(self, value):
@@ -69,8 +69,6 @@ class CarPark(mqtt_device.MqttDevice):
 
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
-        # TODO: Extract temperature from payload
-        # self.temperature = ... # Extracted value
         if 'exit' in payload:
             self.on_car_exit()
         else:
@@ -85,6 +83,5 @@ if __name__ == '__main__':
         # Parse the JSON data into a Python object
         config = json.loads(json_data)
 
-    # TODO: Read config from file
     car_park = CarPark(config)
     print("Carpark initialized")

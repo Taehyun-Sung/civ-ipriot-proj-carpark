@@ -9,7 +9,6 @@ from smartpark.mqtt_device import MqttDevice
 
 
 class Sensor(mqtt_device.MqttDevice):
-
     def __init__(self, config):  # Sensor class' attributes are referred to config file, where all the infos are kept.
         super().__init__(config)
         self.name = config['CarParks'][0][
