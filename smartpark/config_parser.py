@@ -32,8 +32,7 @@ Finally, you can use `yaml` if you prefer.
 """
 
 
-
 def parse_config(config: dict) -> dict:
     """Parse the config file and return the values as a dictionary"""
     # TODO: get the configuration from a parsed file
-    return {'location': 'TBD', 'total_spaces': 0, 'broker_host': 'TBD', 'broker_port': 0}
+    return {'location': 'raf-park-international', 'total_spaces': 130, 'host': 'localhost', 'port': 1883}

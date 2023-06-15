@@ -5,7 +5,6 @@ from smartpark import mqtt_device
 from paho.mqtt.client import MQTTMessage
 
 
-
 class CarPark(mqtt_device.MqttDevice):
     """Creates a carpark object to store the state of cars in the lot"""
 
